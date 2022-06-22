@@ -3,19 +3,28 @@ import styled from "styled-components";
 const Father = styled.div`
   display: flex;
 `;
-const BoxOne = styled.div`
-  background-color: teal;
+const Box = styled.div`
+  background-color: ${(props) => props.bgColor};
   width: 100px;
   height: 100px;
 `;
-const BoxTwo = styled.div`
-  background-color: tomato;
-  width: 100px;
-  height: 100px;
-`;
+
 const Text = styled.span`
   color: white;
 `;
+
+const Circle = styled(Box)`
+  border-radius: 50px;
+`;
+
+const Btn = styled.button`
+  color:white;
+  background-color: tomato;
+  border: 0;
+  border-radius: 15px;
+
+`;
+
 
 function App() {
   return (
@@ -27,8 +36,10 @@ function App() {
       </div>
       <h1>좋은 예시</h1>
       <Father>
-        <BoxOne><Text>Hello!</Text></BoxOne>
-        <BoxTwo></BoxTwo>
+        <Box bgColor="teal">
+          <Text>Hello!</Text>
+        </Box>
+        <Circle bgColor="tomato"></Circle>
       </Father>
     </div>
   );
