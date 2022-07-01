@@ -9,7 +9,7 @@ function Router(){
         <Coin />
       </Route>
       <Route path="/">
-        <Coins />
+        <Coins/>
       </Route>
     </Switch>
   </BrowserRouter>
