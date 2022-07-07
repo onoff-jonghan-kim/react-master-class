@@ -5,8 +5,8 @@ interface ChartProps {
   coinId: string;
 }
 interface IHistorical {
-  time_open: string,
-  time_close: string,
+  time_open: number,
+  time_close: number,
   open: number,
   high: number,
   low: number,
@@ -14,14 +14,33 @@ interface IHistorical {
   volume: number,
   market_cap: number
 }
-
+interface ICandleChartItem{
+  x : Date;
+  y : number[];
+}
 function Chart({coinId}:ChartProps) {
-  const {isLoading, data} = useQuery<IHistorical[]>(["ohlcv", coinId], () => fetchCoinHistory(coinId));
-  return <div>{isLoading ? "Loding chart..." : <ApexChart type="line" 
+  const {isLoading, data} = useQuery<IHistorical[]>(
+    ["ohlcv", coinId], () => fetchCoinHistory(coinId),
+    {
+      refetchInterval: 10000,
+    }
+  );
+  return <div>{isLoading ? "Loding chart..." : <ApexChart 
+  type="candlestick" 
   series={[
     {
-      name: "price",
-      data: data?.map((price) => price.close)as number[],
+      name: "Price",
+      data: data?.map((price)=>{
+        return{
+          x: new Date(price.time_open * 1000),
+          y: [
+            price.open,
+            price.high,
+            price.low,
+            price.close,
+          ]
+        }
+      }) as ICandleChartItem[],
     },
   ]}
   options={
@@ -44,20 +63,24 @@ function Chart({coinId}:ChartProps) {
       show: false,
      },
      xaxis: {
-      axisBorder: {
-        show: false,
-      },
+      axisBorder: { show: false, },
       labels: {
         show: false,
+        datetimeFormatter: {month: "mmm'yy"},
       },
-      axisTicks: {
-        show: false,
-      },
+      axisTicks: { show: false, },
+      type: "datetime",
+      categories: data?.map((price) => (price.time_close)*1000),
      },
      stroke: {
       curve: "smooth",
-      width: 5,
+      width: 2,
      },
+     tooltip: {
+      y: {
+        formatter: (value)=> `$${value.toFixed(2)}`,
+      }
+     }
     }
   } />}</div>;
 }
