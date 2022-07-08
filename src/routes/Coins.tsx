@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
@@ -66,9 +67,13 @@ interface ICoin {
   is_active: boolean,
   type: string,
 }
+interface ICoinsProps {
+  toggleDark: ()=>void;
+}
 
-function Coins() {
+function Coins({toggleDark}: ICoinsProps) {
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
+  
   return (
   <Container>
     <Helmet>
@@ -76,6 +81,7 @@ function Coins() {
     </Helmet>
     <Header>
       <Title>코인!</Title>
+      <button onClick={toggleDark}>Toggle Mode</button>
     </Header>
     {isLoading ? (
       <Loader>Loading...</Loader>
