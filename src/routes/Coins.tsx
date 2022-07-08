@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
   padding: 0px, 20px;
@@ -12,9 +14,15 @@ const Container = styled.div`
 const Header = styled.header`
   height: 10vh;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   margin: 30px 0;
+  cursor: pointer;
+  div{
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const CoinsList = styled.ul`
@@ -68,10 +76,11 @@ interface ICoin {
   type: string,
 }
 interface ICoinsProps {
-  toggleDark: ()=>void;
 }
 
-function Coins({toggleDark}: ICoinsProps) {
+function Coins({}: ICoinsProps) {
+  const setDarkAtom = useSetRecoilState(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev)=>!prev);
   const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
   
   return (
@@ -79,9 +88,9 @@ function Coins({toggleDark}: ICoinsProps) {
     <Helmet>
         <title>코인!</title>
     </Helmet>
-    <Header>
+    <Header onClick={toggleDarkAtom}>
       <Title>코인!</Title>
-      <button onClick={toggleDark}>Toggle Mode</button>
+      <div>Click to Change the Mode</div>
     </Header>
     {isLoading ? (
       <Loader>Loading...</Loader>
